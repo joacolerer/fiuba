@@ -302,7 +302,6 @@ void prueba_abb_iterador_interno(){
     }
 
 
-
 	////Uso iterador interno sin corte corte
 	printf("~~PRUEBO ITERADOR INTERNO SIN CORTE~~\n");
 	int contador1=0;
@@ -314,8 +313,6 @@ void prueba_abb_iterador_interno(){
 	int contador2=0;
 	abb_in_order(abb,verifica_dato_con_corte, &contador2);
     print_test("Recorrio todos los elementos del arbol con el iterador interno con funcion sin corte", contador2 == 3);
-
-
 
     abb_destruir(abb);
 }
