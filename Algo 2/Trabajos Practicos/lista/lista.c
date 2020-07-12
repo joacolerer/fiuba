@@ -45,8 +45,7 @@ lista_iter_t *lista_iter_crear(lista_t *lista){
 }
 
 bool lista_esta_vacia(const lista_t *lista){
-	if(lista->largo == 0) return true;
-	return false;
+	return lista->largo == 0;
 }
 
 bool lista_insertar_primero(lista_t *lista, void *dato){
@@ -89,29 +88,29 @@ bool lista_insertar_ultimo(lista_t *lista, void *dato){
 
 void* lista_borrar_primero(lista_t *lista){
 	if(lista_esta_vacia(lista)){
-			return NULL;
+		return NULL;
 	}
 	nodo_t* nodo_aux = lista->prim->sig;
 	void* dato = lista->prim->dato;
 	free(lista->prim);
 	lista->prim = nodo_aux;
+	lista->largo--;
 	if(lista_esta_vacia(lista)){
 		lista->ult = NULL;
 	}
-	lista->largo--;
 	return dato;
 }
 
 void* lista_ver_primero(const lista_t *lista){
 	if(lista_esta_vacia(lista)){
-			return NULL;
+		return NULL;
 	}
 	return lista->prim->dato;
 }
 
 void* lista_ver_ultimo(const lista_t* lista){
 	if(lista_esta_vacia(lista)){
-			return NULL;
+		return NULL;
 	}
 	return lista->ult->dato;
 }
@@ -138,10 +137,7 @@ void lista_destruir(lista_t *lista, void (*destruir_dato)(void *)){
 }
 
 bool lista_iter_al_final(const lista_iter_t *iter){
-	if(!iter->act){
-		return true;
-	}
-	return false;
+	return iter->act == NULL;
 }
 
 

@@ -7,10 +7,6 @@
 
 #define CANT_ELEM_PRUEBA_VOLUMEN 5000
 
-//~ struct prueba_iter{
-	//~ size_t cant;
-	//~ int acum;
-//~ };
 
 
 void prueba_crear_y_destruir_sin_funcion(){
@@ -230,13 +226,6 @@ bool sumar_elementos(void *elemento, void *extra){
     return true; 
 }
 
-//~ bool sumar_seis_elementos(void *elemento, void *extra){
-	//~ struct prueba_iter* s = extra;
-    //~ if((size_t)s->cant  >= 6) return false;
-    //~ s->acum = *(int*) elemento;
-    //~ s->cant++;
-    //~ return true; 
-//~ }
 
 void prueba_sumar_elementos(lista_t *lista){	
 	
@@ -249,14 +238,6 @@ void prueba_sumar_elementos(lista_t *lista){
 		lista_borrar_primero(lista);
 	}
     print_test("La suma de los elementos con iterador interno fue correcta", acum1 == acum2);
-    //FALTA HACER PRUEBA CON CORTE DE CONTROL
-    //~ printf("INICIO PRUEBA SUMAR 6 ELEMENTOS:\n");
-    //~ struct prueba_iter* struct_prueba = malloc(sizeof(struct prueba_iter));
-    //~ struct_prueba->acum = 0;
-    //~ struct_prueba->cant = 0;
-    //~ lista_iterar(lista, sumar_seis_elementos, struct_prueba);
-    //~ printf("Cantidad de elementos recorridos: %ld y la suma de estos elementos es: %d\n", struct_prueba->cant, struct_prueba->acum);
-    //~ free(struct_prueba);
 }
 
 void pruebas_iterador_interno(){
@@ -427,6 +408,7 @@ void  pruebas_lista_alumno(){
 	pruebas_iterador_interno();
 	pruebas_iterador_externo();
 	prueba_destruir_lista_con_funcion();
+	
 }
 
 
