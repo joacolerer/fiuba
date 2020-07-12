@@ -322,6 +322,14 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
 
 /* Iterador interno */
 
+void apilar_en_iter(nodo_abb_t* nodo, pila_t* pila){
+	while(nodo->izq != NULL){
+		pila_apilar(pila,nodo->izq);
+		nodo = nodo->izq;
+	}
+}
+
+
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
 	abb_iter_t* abb_iter = malloc(sizeof(abb_iter_t));
 	if (abb_iter == NULL) return NULL;
@@ -334,10 +342,7 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
 	if (arbol->raiz == NULL) return abb_iter;
 	nodo_abb_t* actual = arbol->raiz;
 	pila_apilar(abb_iter->pila,arbol->raiz);
-	while(actual->izq != NULL){ //CORRECCIÓN: Esto lo repiten muchas veces, reutilicen
-		pila_apilar(abb_iter->pila,actual->izq);
-		actual = actual->izq;
-	}
+	apilar_en_iter(actual, abb_iter->pila);
 	return abb_iter;
 }
 
@@ -347,10 +352,7 @@ bool abb_iter_in_avanzar(abb_iter_t *iter){
 	if (actual->der == NULL) return true;
 	pila_apilar(iter->pila,actual->der);
 	actual = actual->der;
-	while(actual->izq != NULL){
-		pila_apilar(iter->pila,actual->izq);
-		actual = actual->izq;
-	}
+	apilar_en_iter(actual, iter->pila);
 	return true;
 }
 

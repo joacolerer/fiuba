@@ -261,28 +261,11 @@ void prueba_abb_iterador_externo(){
     abb_destruir(abb);
 }
 
-void prueba_abb_iterador_interno(){
-	printf("~~INICIO DE PRUEBA ITERADOR INTERNO EN ABB~~\n");
-    abb_t* abb = abb_crear(strcmp,NULL);
-    //Verifico si el arbol fue creado
-	print_test("El arbol fue creado", abb != NULL);
-
-	//Declaro valores a insertar
-	char *claves[] = {"perro", "gato", "vaca","chancho","oveja"};
-	char *valores[] = {"guau", "miau", "mu","oink","mee"};
-
-	char *claves_ordenadas[] = {"chancho", "gato", "oveja","perro","vaca"};
-	char *valores_ordenados[] = {"oink", "miau", "mee","guau","mu"};
-
-    /* Inserta 5 valores */
-    print_test("Prueba abb insertar clave1", abb_guardar(abb, claves[0], valores[0]));
-    print_test("Prueba abb insertar clave2", abb_guardar(abb, claves[1], valores[1]));
-    print_test("Prueba abb insertar clave3", abb_guardar(abb, claves[2], valores[2]));
-    print_test("Prueba abb insertar clave4", abb_guardar(abb, claves[3], valores[3]));
-    print_test("Prueba abb insertar clave5", abb_guardar(abb, claves[4], valores[4]));
-
     	//Declaro las funciones a iterar
     bool verifica_dato_sin_corte(const char* clave,void* dato, void* extra){
+
+	    char *claves_ordenadas[] = {"chancho", "gato", "oveja","perro","vaca"};
+	    char *valores_ordenados[] = {"oink", "miau", "mee","guau","mu"};
         
         print_test("Coincide con la clave esperada", strcmp(clave,claves_ordenadas[*(int*)extra]) == 0);
         
@@ -293,6 +276,9 @@ void prueba_abb_iterador_interno(){
 
     bool verifica_dato_con_corte(const char* clave, void* dato, void* extra){
         if (*(int*)extra > 2) return false;
+
+	    char *claves_ordenadas[] = {"chancho", "gato", "oveja","perro","vaca"};
+	    char *valores_ordenados[] = {"oink", "miau", "mee","guau","mu"};
         
         print_test("Coincide con la clave esperada", strcmp(clave,claves_ordenadas[*(int*)extra]) == 0);
         
@@ -300,6 +286,24 @@ void prueba_abb_iterador_interno(){
         *(int*)extra += 1;
         return true;
     }
+
+void prueba_abb_iterador_interno(){
+	printf("~~INICIO DE PRUEBA ITERADOR INTERNO EN ABB~~\n");
+    abb_t* abb = abb_crear(strcmp,NULL);
+    //Verifico si el arbol fue creado
+	print_test("El arbol fue creado", abb != NULL);
+
+	//Declaro valores a insertar
+	char *claves[] = {"perro", "gato", "vaca","chancho","oveja"};
+	char *valores[] = {"guau", "miau", "mu","oink","mee"};
+
+
+    /* Inserta 5 valores */
+    print_test("Prueba abb insertar clave1", abb_guardar(abb, claves[0], valores[0]));
+    print_test("Prueba abb insertar clave2", abb_guardar(abb, claves[1], valores[1]));
+    print_test("Prueba abb insertar clave3", abb_guardar(abb, claves[2], valores[2]));
+    print_test("Prueba abb insertar clave4", abb_guardar(abb, claves[3], valores[3]));
+    print_test("Prueba abb insertar clave5", abb_guardar(abb, claves[4], valores[4]));
 
 
 	////Uso iterador interno sin corte corte
