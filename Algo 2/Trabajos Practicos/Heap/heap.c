@@ -28,10 +28,11 @@ struct heap{
  *                       FUNCIONES AUXILIARES
  * *****************************************************************/
 
-void swap (void *x, void *y) {
-	void* aux = x;
-	x = y;
-	y=aux;
+void swap (void **x, void **y) {
+	void* aux = *x;
+	*x = *y;
+	*y=aux;
+
 }
 
 //Redimension

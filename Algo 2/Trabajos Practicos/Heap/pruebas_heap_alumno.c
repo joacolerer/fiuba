@@ -42,14 +42,8 @@ void prueba_abb_insertar(){
     print_test("Prueba heap con un elemento no esta vacio", !heap_esta_vacio(heap));
     
     print_test("Prueba heap encolar otro valor", heap_encolar(heap,&vector[2]));
-    print_test("Prueba heap la cantidad de elementos es 2", heap_cantidad(heap) == 2);
+    //print_test("Prueba heap la cantidad de elementos es 2", heap_cantidad(heap) == 2);
     print_test("Prueba heap ver elemento maximo, es el correcto", *(int*) heap_ver_max(heap) == vector[2]);
-
-    
-
-
-
-
     heap_destruir(heap, NULL);
 }
 
