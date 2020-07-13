@@ -180,8 +180,10 @@ void *heap_desencolar(heap_t *heap){
 		heap_redimensionar(heap,heap->cap / COEF_REDIM);
 	}
 	void* elem = heap->datos[0];
-	swap(heap->datos[0], heap->datos[heap->cant - 1]);
-	downheap(heap->datos, heap->cant, 0, heap->cmp);
 	heap->cant--;
+	if(!heap_esta_vacio(heap)){
+		swap(heap->datos[0], heap->datos[heap->cant]);
+		downheap(heap->datos, heap->cant, 0, heap->cmp);
+	}
 	return elem;
 }
