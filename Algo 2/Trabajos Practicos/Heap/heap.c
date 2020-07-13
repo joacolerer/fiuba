@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include "heap.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -27,6 +28,12 @@ struct heap{
  *                       FUNCIONES AUXILIARES
  * *****************************************************************/
 
+void swap (void *x, void *y) {
+	void* aux = x;
+	x = y;
+	y=aux;
+}
+
 //Redimension
 bool heap_redimensionar(heap_t* heap, size_t nueva_capacidad) {
 	void* nuevos_datos = realloc(heap->datos, nueva_capacidad*sizeof(void*));
@@ -36,9 +43,42 @@ bool heap_redimensionar(heap_t* heap, size_t nueva_capacidad) {
 	return true;
 }
 
+size_t calcular_pos_padre(size_t pos){
+	return (pos -1) / 2;
+}
+
+size_t calcular_maximo(void** arreglo,cmp_func_t cmp, size_t padre, size_t izq, size_t der){
+	if(cmp(arreglo[padre], arreglo[izq]) > 0 && cmp(arreglo[padre], arreglo[der]) > 0){
+		return padre;
+	}
+	return cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
+}
+
 //DownHeap
+void downheap(void** arreglo, size_t tam, size_t padre, cmp_func_t cmp){
+	if (padre >= tam) return;
+	size_t izq = 2 * padre + 1;
+	size_t der = 2 * padre + 2;
+
+	size_t max = calcular_maximo(arreglo, cmp, padre, izq, der);
+
+	if(max != padre){
+		swap(arreglo[max], arreglo[padre]);
+		downheap(arreglo, tam, max,cmp);
+	}
+
+}
 
 //UpHeap
+
+void upheap(void** arreglo, size_t hijo, cmp_func_t cmp){
+	if(hijo == 0) return;
+	size_t padre = calcular_pos_padre(hijo);
+	if(cmp(arreglo[padre], arreglo[hijo]) < 0 ){
+		swap(arreglo[padre],arreglo[hijo]);
+		upheap(arreglo, padre,cmp);
+	}
+}
 
 //Swap
 
@@ -75,7 +115,7 @@ heap_t *heap_crear(cmp_func_t cmp){
  * Excepto por la complejidad, es equivalente a crear un heap vacío y encolar
  * los valores de uno en uno
 */
-//Esta funcion es para hacer hipify
+//Esta funcion es para hacer heapify
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp);
 
 
@@ -100,7 +140,7 @@ size_t heap_cantidad(const heap_t *heap){
 /* Devuelve true si la cantidad de elementos que hay en el heap es 0, false en
  * caso contrario. */
 bool heap_esta_vacio(const heap_t *heap){
-	return (heap->cant == 0);
+	return heap->cant == 0;
 }
 
 /* Agrega un elemento al heap. El elemento no puede ser NULL.
@@ -111,13 +151,12 @@ bool heap_esta_vacio(const heap_t *heap){
 bool heap_encolar(heap_t *heap, void *elem){
 	//Si esta lleno hay que redimensionar
 	if (heap->cant == heap->cap){
-		size_t nueva_capacidad = COEF_REDIM * heap->cap;
-		bool redimension = heap_redimensionar(heap,nueva_capacidad);
+		bool redimension = heap_redimensionar(heap,COEF_REDIM * heap->cap);
 		if (redimension == false) return false;
 	}
 	heap->datos[heap->cant] = elem;
-	heap->cant += 1;
-	//Aca deberia hacer Upheap
+	upheap(heap->datos,heap->cant,heap->cmp);
+	heap->cant++;
 	return true;
 }
 
@@ -138,11 +177,11 @@ void *heap_ver_max(const heap_t *heap){
 void *heap_desencolar(heap_t *heap){
 	if (heap_esta_vacio(heap)) return NULL;
 	if  (heap->cant * (2*COEF_REDIM) <= heap->cap && heap->cap > CAP){
-		size_t nueva_capacidad = heap->cap / COEF_REDIM;
-		heap_redimensionar(heap,nueva_capacidad);
+		heap_redimensionar(heap,heap->cap / COEF_REDIM);
 	}
 	void* elem = heap->datos[0];
-	//Aca pongo el ultimo en la primer posicion y hago Downheap
-	heap->cant-=1;
+	swap(heap->datos[0], heap->datos[heap->cant - 1]);
+	downheap(heap->datos, heap->cant, 0, heap->cmp);
+	heap->cant--;
 	return elem;
 }
