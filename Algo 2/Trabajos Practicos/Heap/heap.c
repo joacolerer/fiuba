@@ -28,10 +28,10 @@ struct heap{
  *                       FUNCIONES AUXILIARES
  * *****************************************************************/
 
-void swap (void **x, void **y) {
-	void* aux = *x;
-	*x = *y;
-	*y=aux;
+void swap (void** arreglo,size_t padre, size_t hijo) {
+	void* aux = arreglo[padre];
+	arreglo[padre] = arreglo[hijo];
+	arreglo[hijo]=aux;
 
 }
 
@@ -48,12 +48,18 @@ size_t calcular_pos_padre(size_t pos){
 	return (pos -1) / 2;
 }
 
-size_t calcular_maximo(void** arreglo,cmp_func_t cmp, size_t padre, size_t izq, size_t der){
-	if(cmp(arreglo[padre], arreglo[izq]) > 0 && cmp(arreglo[padre], arreglo[der]) > 0){
-		return padre;
+size_t calcular_maximo(void** arreglo,cmp_func_t cmp, size_t padre, size_t izq, size_t der, size_t tam){
+	//Pregunto si tiene hijo derecho para hacer la comparacion entre 3 elementos
+	if (der <= tam){
+		if(cmp(arreglo[padre], arreglo[izq]) > 0 && cmp(arreglo[padre], arreglo[der]) > 0){
+			return padre;
+		}
+		return cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
 	}
-	return cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
+	//Si entra aca significa que tiene solo hijo izquierdo, ya que si llama a esta funcion, seguro tiene tam > al padre
+	return cmp(arreglo[padre], arreglo[izq]) > 0 ? padre : izq;
 }
+
 
 //DownHeap
 void downheap(void** arreglo, size_t tam, size_t padre, cmp_func_t cmp){
@@ -61,22 +67,20 @@ void downheap(void** arreglo, size_t tam, size_t padre, cmp_func_t cmp){
 	size_t izq = 2 * padre + 1;
 	size_t der = 2 * padre + 2;
 
-	size_t max = calcular_maximo(arreglo, cmp, padre, izq, der);
+	size_t max = calcular_maximo(arreglo, cmp, padre, izq, der, tam);
 
 	if(max != padre){
-		swap(arreglo[max], arreglo[padre]);
+		swap(arreglo, max, padre);
 		downheap(arreglo, tam, max,cmp);
 	}
-
 }
 
 //UpHeap
-
 void upheap(void** arreglo, size_t hijo, cmp_func_t cmp){
 	if(hijo == 0) return;
 	size_t padre = calcular_pos_padre(hijo);
 	if(cmp(arreglo[padre], arreglo[hijo]) < 0 ){
-		swap(arreglo[padre],arreglo[hijo]);
+		swap(arreglo, padre,hijo);
 		upheap(arreglo, padre,cmp);
 	}
 }
@@ -126,7 +130,7 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp);
  * dejó de ser válido. */
 void heap_destruir(heap_t *heap, void (*destruir_elemento)(void *e)){
 	if (destruir_elemento != NULL){
-		for (int i = 0 ; i < heap->cant ; i++) destruir_elemento(heap->datos[i]);
+		for (int i = 0 ; i < heap->cant - 1; i++) destruir_elemento(heap->datos[i]);
 	}
 	free(heap->datos);
 	free(heap);
@@ -183,7 +187,7 @@ void *heap_desencolar(heap_t *heap){
 	void* elem = heap->datos[0];
 	heap->cant--;
 	if(!heap_esta_vacio(heap)){
-		swap(heap->datos[0], heap->datos[heap->cant]);
+		swap(heap->datos, 0, heap->cant);
 		downheap(heap->datos, heap->cant, 0, heap->cmp);
 	}
 	return elem;

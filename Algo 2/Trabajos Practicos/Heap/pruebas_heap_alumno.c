@@ -28,13 +28,13 @@ void prueba_abb_insertar(){
     int vector[] = {1,2,3};
 
     /* Inserta 1 valor y luego lo borra */
-    print_test("Prueba heap enclar un valor", heap_encolar(heap,&vector[0]));
-    print_test("Prueba heap la cantidad de elementos es 1", heap_cantidad(heap) == 1);
-    print_test("Prueba heap ver elemento maximo, es el correcto", *(int*) heap_ver_max(heap) == vector[0]);
-    print_test("Prueba heap con un elemento no esta vacio", !heap_esta_vacio(heap));
-    print_test("Prueba heap elemento desencolado es el elemento encolado", *(int*)heap_desencolar(heap) == vector[0]);
-    print_test("Prueba heap la cantidad de elementos es 0 despues de desencolar", heap_cantidad(heap) == 0);
-    print_test("Prueba heap esta vacio despues de desencolar el unico elemento encolado ", heap_esta_vacio(heap));
+    //print_test("Prueba heap enclar un valor", heap_encolar(heap,&vector[0]));
+    //print_test("Prueba heap la cantidad de elementos es 1", heap_cantidad(heap) == 1);
+    //print_test("Prueba heap ver elemento maximo, es el correcto", *(int*) heap_ver_max(heap) == vector[0]);
+    //print_test("Prueba heap con un elemento no esta vacio", !heap_esta_vacio(heap));
+    //print_test("Prueba heap elemento desencolado es el elemento encolado", *(int*)heap_desencolar(heap) == vector[0]);
+    //print_test("Prueba heap la cantidad de elementos es 0 despues de desencolar", heap_cantidad(heap) == 0);
+    //print_test("Prueba heap esta vacio despues de desencolar el unico elemento encolado ", heap_esta_vacio(heap));
 
     print_test("Prueba heap encolar un valor", heap_encolar(heap,&vector[1]));
     print_test("Prueba heap la cantidad de elementos es 1", heap_cantidad(heap) == 1);
@@ -42,7 +42,7 @@ void prueba_abb_insertar(){
     print_test("Prueba heap con un elemento no esta vacio", !heap_esta_vacio(heap));
     
     print_test("Prueba heap encolar otro valor", heap_encolar(heap,&vector[2]));
-    //print_test("Prueba heap la cantidad de elementos es 2", heap_cantidad(heap) == 2);
+    print_test("Prueba heap la cantidad de elementos es 2", heap_cantidad(heap) == 2);
     print_test("Prueba heap ver elemento maximo, es el correcto", *(int*) heap_ver_max(heap) == vector[2]);
     heap_destruir(heap, NULL);
 }
