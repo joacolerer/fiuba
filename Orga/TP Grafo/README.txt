@@ -1,4 +1,4 @@
-Nombfe: Joaquin Matias Lerer
+Nombre: Joaquin Matias Lerer
 Padron: 105.493
 
 Consideraciones para el uso del programa:

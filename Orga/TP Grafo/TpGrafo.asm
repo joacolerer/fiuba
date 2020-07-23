@@ -6,12 +6,11 @@ extern  sscanf
 
 section .data
 ;Matriz de adyacencia del grafo
-    grafo       dq  0,10,4,0,0,0
-                dq  0,0, 0 ,9,0,0
-                dq  0,0,0 ,8,4,0
-                dq  0,0 ,0 ,0,6,10
-                dq  0,0 ,0 ,0,0,10
-                dq  0,0 ,0 ,0,0,0
+    grafo       dq  0,0,10,10,0
+                dq  0,0,0,20,8
+                dq  0,30,0,0,0
+                dq  0,0,5,0,0
+                dq  0,0,0,0,0
 ;Mensajes de entrada
     msgBienvenida           db 10,"Materia: Organizacion del computador.",10,"Trabajo practico numero 20: Flujo maximal de un grafo.",0
     msgExplicacionTP        db "El algoritmo a ser usado es el algoritmo de Ford-Fulkerson para enocntrar el flujo maximal de un grafo implementado en Assembly",0
