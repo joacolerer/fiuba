@@ -4,6 +4,8 @@
 #include <string.h>
 #include "csv.h"
 #include "abb.h"
+#include "hash.h"
+#include "structs.h"
 #define SEPARADOR ','
 
 static void eliminar_fin_linea(char* linea) {
@@ -13,7 +15,7 @@ static void eliminar_fin_linea(char* linea) {
 	}
 }
 
-abb_t* csv_crear_estructura(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
+abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
 	FILE* archivo = fopen(ruta_csv, "r");
 	if (!archivo) {
 		return NULL;
@@ -36,6 +38,32 @@ abb_t* csv_crear_estructura(const char* ruta_csv, void* (*creador) (char**, void
 	free(linea);
 	fclose(archivo);
 	return abb;
+}
+
+
+hash_t* csv_crear_estructura_pacientes(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
+	FILE* archivo = fopen(ruta_csv, "r");
+	if (!archivo) {
+		return NULL;
+	}
+
+	hash_t* hash = hash_crear(destruir_especialidad);
+	if (!hash) {
+		fclose(archivo);
+		return NULL;
+	}
+
+	char* linea = NULL;
+	size_t c = 0;
+	while (getline(&linea, &c, archivo) > 0) {
+		eliminar_fin_linea(linea);
+		char** campos = split(linea, SEPARADOR);
+		hash_guardar(hash,campos[0],creador(campos,extra));
+		free_strv(campos);
+	}
+	free(linea);
+	fclose(archivo);
+	return hash;
 }
 
 

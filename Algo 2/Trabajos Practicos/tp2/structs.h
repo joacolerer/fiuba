@@ -18,11 +18,13 @@ paciente_t* crear_paciente(char** campos,void* extra);
 
 clinica_t* crear_clinica(char** argv);
 
-void destruir_clinica(clinica_t* clinica);
+especialidad_t* crear_especialidad(char* nombre);
+
+void destruir_doctor(doctor_t* doctor);
 
 void destruir_paciente(paciente_t* paciente);
 
-void destruir_doctor(doctor_t* doctor);
+void destruir_clinica(clinica_t* clinica);
 
 void destruir_especialidad(especialidad_t* especialidad);
 

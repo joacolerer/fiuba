@@ -23,7 +23,7 @@ struct paciente{
 
  struct clinica{
 	abb_t* doctores;
-	abb_t* pacientes;
+	hash_t* pacientes;
 	hash_t* especialidades;
 };
 
@@ -60,8 +60,8 @@ paciente_t* crear_paciente(char** campos,void* extra){
 clinica_t* crear_clinica(char** argv){
 	clinica_t* clinica = malloc(sizeof(clinica_t));
 	if (!clinica) return NULL;
-	clinica->doctores = csv_crear_estructura(argv[1],(void*)crear_doctor,NULL);
-	clinica->pacientes = csv_crear_estructura(argv[2],(void*)crear_paciente,NULL);
+	clinica->doctores = csv_crear_estructura_doctor(argv[1],(void*)crear_doctor,NULL);
+	clinica->pacientes = csv_crear_estructura_pacientes(argv[2],(void*)crear_paciente,NULL);
 	//clinica->especialidades = hash_crear()
 	return clinica;
 }
