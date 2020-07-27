@@ -1,7 +1,6 @@
 #ifndef __CSV__H_
 #define __CSV__H_
 
-#include "lista.h"
 #include "strutil.h"
 
 /**
@@ -16,7 +15,8 @@ necesario); luego de invocarse el constructor se invoca a free_strv.
 Se devuelve una lista con todos los elementos construidos. NULL en caso que el archivo
 csv (indicado por la ruta pasada por parámetro) no exista. 
 **/
-lista_t* csv_crear_estructura(const char* ruta_csv, void* (*constructor) (char**, void*), void* extra);
+abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**, void*), void* extra);
+hash_t* csv_crear_estructura_pacientes(const char* ruta_csv, void* (*creador) (char**, void*), void* extra);
 
 
 #endif

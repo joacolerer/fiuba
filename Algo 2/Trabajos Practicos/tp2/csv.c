@@ -15,7 +15,7 @@ static void eliminar_fin_linea(char* linea) {
 	}
 }
 
-abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
+abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**, void*), void* extra){
 	FILE* archivo = fopen(ruta_csv, "r");
 	if (!archivo) {
 		return NULL;
@@ -41,7 +41,7 @@ abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char*
 }
 
 
-hash_t* csv_crear_estructura_pacientes(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
+hash_t* csv_crear_estructura_pacientes(const char* ruta_csv, void* (*creador) (char**, void*), void* extra){
 	FILE* archivo = fopen(ruta_csv, "r");
 	if (!archivo) {
 		return NULL;
