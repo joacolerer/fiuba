@@ -53,16 +53,20 @@ paciente_t* crear_paciente(char** campos,void* extra){
 	paciente_t* paciente = malloc(sizeof(paciente_t));
 	if (!paciente) return NULL;
 	paciente->nombre = campos[0];
-	paciente->anio = campos[1]; // Validar anios !
+	paciente->anio = atoi(campos[1]); // Validar anios !
 	return paciente;
 }
 
 clinica_t* crear_clinica(char** argv){
 	clinica_t* clinica = malloc(sizeof(clinica_t));
 	if (!clinica) return NULL;
-	clinica->doctores = csv_crear_estructura_doctor(argv[1],(void*)crear_doctor,NULL);
+	hash_t* hash_especialidades = hash_crear(destruir_especialidad);
+	if(!hash_especialidades) return NULL;
+	clinica->doctores = csv_crear_estructura_doctor(argv[1],(void*)crear_doctor,hash_especialidades);
+	if(!clinica->doctores) return NULL;
 	clinica->pacientes = csv_crear_estructura_pacientes(argv[2],(void*)crear_paciente,NULL);
-	//clinica->especialidades = hash_crear()
+	if(!clinica->pacientes) return NULL;
+	clinica->especialidades = hash_especialidades;
 	return clinica;
 }
 
@@ -107,4 +111,12 @@ int cmp_pacientes(const void *a, const void *b){
 	if(((paciente_t*)a)->anio == ((paciente_t*)b)->anio) return 0;
     if(((paciente_t*)a)->anio < ((paciente_t*)b)->anio) return 1;
     return -1;
+}
+
+/* ******************************************************************
+ *                      FUNCIONES PARA ENCOLAR/DESENCOLAR
+ * *****************************************************************/
+
+void encolar_doctor_en_especialidad(especialidad_t* especialidad, doctor_t* doctor){
+	cola_encolar(especialidad->doctores,doctor);
 }

@@ -28,4 +28,6 @@ void destruir_clinica(clinica_t* clinica);
 
 void destruir_especialidad(especialidad_t* especialidad);
 
+void encolar_doctor_en_especialidad(especialidad_t* especialidad, doctor_t* doctor);
+
 #endif

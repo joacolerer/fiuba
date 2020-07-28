@@ -13,20 +13,9 @@
 
 
 /* ******************************************************************
- *                      FUNCIONES AUXILIARES
- * *****************************************************************/
-
-// bool validar_año();
-
-
-
-/* ******************************************************************
  *                       FUNCIONES PRINCIPALES
  * *****************************************************************/
 
-void cargar_informacion(){
-
-}
 
 void procesar_comando(const char* comando,char** parametros) {
 	if (strcmp(comando, COMANDO_PEDIR_TURNO) == 0) {
@@ -77,9 +66,12 @@ int main(int argc, char** argv) {
 
 	if (argc != 3){ // Recibe el nombre del promgrama y el nombre de 2 archivos
 		printf(ENOENT_CANT_PARAMS);
-		//return o exit
+		return 1;
 	}
-
+	clinica_t* clinica = crear_clinica(argv);
+	if(!clinica){
+		return 1;
+	}
 
 	return 0;
 }
