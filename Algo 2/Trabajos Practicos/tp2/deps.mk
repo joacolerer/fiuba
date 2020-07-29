@@ -1,0 +1,1 @@
+zyxcba:	zyxcba.o strutil.o clinica.o csv.o structs.o pila.o cola.o abb.o heap.o hash.o

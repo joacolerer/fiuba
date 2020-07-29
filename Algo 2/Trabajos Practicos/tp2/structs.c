@@ -1,10 +1,5 @@
+#include <stdlib.h>
 #include "structs.h"
-#include "csv.h"
-#include "abb.h"
-#include "hash.h"
-#include "heap.h"
-#include "cola.h"
-#include "lista.h"
 
 
 /* ******************************************************************
@@ -16,15 +11,10 @@
 	char* especialidad;
 	int cant_atendidos;
 };
+
 struct paciente{
 	char* nombre;
 	int anio;
-};
-
- struct clinica{
-	abb_t* doctores;
-	hash_t* pacientes;
-	hash_t* especialidades;
 };
 
  struct especialidad{
@@ -35,12 +25,23 @@ struct paciente{
 };
 
 /* ******************************************************************
+ *                      FUNCIONES AUXILIARES
+ * *****************************************************************/
+
+//NO SE AL 100%, CREO QUE ES ASI
+int cmp_pacientes(const void *a, const void *b){
+	if(((paciente_t*)a)->anio == ((paciente_t*)b)->anio) return 0;
+    if(((paciente_t*)a)->anio < ((paciente_t*)b)->anio) return 1;
+    return -1;
+}
+
+/* ******************************************************************
  *                      FUNCIONES DE CREACION
  * *****************************************************************/
 
 // Tal vez deberiamos hacer copia de los parametros en estas funciones
 
-doctor_t* crear_doctor(char** campos,void* extra){
+doctor_t* crear_doctor(char** campos){
 	doctor_t* doctor = malloc(sizeof(doctor_t));
 	if (!doctor) return NULL;
 	doctor->cant_atendidos = 0;
@@ -57,38 +58,34 @@ paciente_t* crear_paciente(char** campos,void* extra){
 	return paciente;
 }
 
-clinica_t* crear_clinica(char** argv){
-	clinica_t* clinica = malloc(sizeof(clinica_t));
-	if (!clinica) return NULL;
-	hash_t* hash_especialidades = hash_crear(destruir_especialidad);
-	if(!hash_especialidades) return NULL;
-	clinica->doctores = csv_crear_estructura_doctor(argv[1],(void*)crear_doctor,hash_especialidades);
-	if(!clinica->doctores) return NULL;
-	clinica->pacientes = csv_crear_estructura_pacientes(argv[2],(void*)crear_paciente,NULL);
-	if(!clinica->pacientes) return NULL;
-	clinica->especialidades = hash_especialidades;
-	return clinica;
-}
-
 especialidad_t* crear_especialidad(char* nombre){
 	especialidad_t* especialidad = malloc(sizeof(especialidad_t));
 	if(!especialidad) return NULL;
 	especialidad->nombre = nombre;
 	especialidad->regulares = heap_crear(cmp_pacientes);
-	if(!especialidad->regulares) return NULL;
+	if(!especialidad->regulares){
+		free(especialidad);
+		return NULL;
+	}
 	especialidad->urgencias = cola_crear();
-	if(!especialidad->urgencias) return NULL;
+	if(!especialidad->urgencias){
+		heap_destruir(especialidad->regulares,free); // Pasar destruir paciente
+		free(especialidad);
+		return NULL;
+	}
 	especialidad->doctores = cola_crear();
-	if(!especialidad->doctores) return NULL;
+	if(!especialidad->doctores){
+		heap_destruir(especialidad->regulares,free);
+		cola_destruir(especialidad->urgencias,free);
+		free(especialidad);
+		return NULL;
+	}
 	return especialidad;
 }
 
-void destruir_clinica(clinica_t* clinica){
-	abb_destruir(clinica->doctores);
-	abb_destruir(clinica->pacientes);
-	hash_destruir(clinica->especialidades);
-	free(clinica);
-}
+/* ******************************************************************
+ *                      FUNCIONES DE DESTRUCCIÒN
+ * *****************************************************************/
 
 void destruir_paciente(paciente_t* paciente){
 	//free(paciente->nombre)?
@@ -99,18 +96,16 @@ void destruir_doctor(doctor_t* doctor){
 	free(doctor);
 }
 
-void destruir_especialidad(especialidad_t* especialidad){
-	heap_destruir(especialidad->regulares, destruir_paciente);
-	cola_destruir(especialidad->doctores,destruir_doctor);
-	cola_destruir(especialidad->urgencias,destruir_paciente);
-	free(especialidad);
+//void (*hash_destruir_dato_t)(void *);
+void w_destruir_especialidad(void* especialidad){
+	destruir_especialidad((especialidad_t*) especialidad);
 }
 
-//NO SE AL 100%, CREO QUE ES ASI
-int cmp_pacientes(const void *a, const void *b){
-	if(((paciente_t*)a)->anio == ((paciente_t*)b)->anio) return 0;
-    if(((paciente_t*)a)->anio < ((paciente_t*)b)->anio) return 1;
-    return -1;
+void destruir_especialidad(especialidad_t* especialidad){
+	heap_destruir(especialidad->regulares,free);
+	cola_destruir(especialidad->doctores,free);
+	cola_destruir(especialidad->urgencias,free);
+	free(especialidad);
 }
 
 /* ******************************************************************

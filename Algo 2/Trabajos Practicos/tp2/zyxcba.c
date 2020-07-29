@@ -1,10 +1,11 @@
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <string.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include "strutil.h"
 #include "mensajes.h"
-#include "structs.h"
+#include "clinica.h"
 //#include "funciones_tp2.h"
 
 #define COMANDO_PEDIR_TURNO "PEDIR_TURNO"
@@ -72,6 +73,6 @@ int main(int argc, char** argv) {
 	if(!clinica){
 		return 1;
 	}
-
+	destruir_clinica(clinica);
 	return 0;
 }

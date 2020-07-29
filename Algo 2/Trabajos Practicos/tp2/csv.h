@@ -1,6 +1,13 @@
 #ifndef __CSV__H_
 #define __CSV__H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+#include "structs.h"
+#include "mensajes.h"
 #include "strutil.h"
 
 /**
@@ -9,14 +16,16 @@ va llamando al constructor que se pasa por parámetro. Dicho constructor se invo
 con la línea separada por split, sin fines de línea ni ninguna otra consideración,
 y con el puntero extra que se pasa por parámetro.
 Importante: la función constructor no debe guardar las referencias a las cadenas
-dentro de arreglo de cadenas pasado por parámetros (hacer copias en caso de ser 
+dentro de arreglo de cadenas pasado por parámetros (hacer copias en caso de ser
 necesario); luego de invocarse el constructor se invoca a free_strv.
 
 Se devuelve una lista con todos los elementos construidos. NULL en caso que el archivo
-csv (indicado por la ruta pasada por parámetro) no exista. 
+csv (indicado por la ruta pasada por parámetro) no exista.
 **/
-abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**, void*), void* extra);
-hash_t* csv_crear_estructura_pacientes(const char* ruta_csv, void* (*creador) (char**, void*), void* extra);
+
+abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**), hash_t* hash);
+
+hash_t* csv_crear_estructura_pacientes(const char* ruta_csv);
 
 
 #endif

@@ -11,8 +11,7 @@ struct pila {
 };
 
 
-bool redimension(pila_t *pila, size_t tam){
-	
+bool redimension_pila(pila_t *pila, size_t tam){
 	void** datos_nuevo = realloc(pila->datos, tam * sizeof(void*));
 	
 	if(datos_nuevo == NULL){
@@ -60,7 +59,7 @@ bool pila_esta_vacia(const pila_t *pila){
 
 bool pila_apilar(pila_t *pila, void* valor){
 	if(pila->cantidad == pila->capacidad){
-		if(!redimension(pila, pila->capacidad * CONST_REDIMENSION)){
+		if(!redimension_pila(pila, pila->capacidad * CONST_REDIMENSION)){
 			return false;
 		}
 	}
@@ -82,7 +81,7 @@ void* pila_desapilar(pila_t *pila){
 	}
 	pila->cantidad--;
 	if(pila->cantidad * 4 <= pila->capacidad && pila->cantidad!= 0){
-		redimension(pila, pila->capacidad / CONST_REDIMENSION);
+		redimension_pila(pila, pila->capacidad / CONST_REDIMENSION);
 	}
 	return pila->datos[pila->cantidad];
 }
