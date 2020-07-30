@@ -85,5 +85,7 @@ void *heap_desencolar(heap_t *heap);
 
 void pruebas_heap_alumno(void);
 
+
+
 #endif // HEAP_H
 

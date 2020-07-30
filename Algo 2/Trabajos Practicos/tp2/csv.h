@@ -23,7 +23,7 @@ Se devuelve una lista con todos los elementos construidos. NULL en caso que el a
 csv (indicado por la ruta pasada por parámetro) no exista.
 **/
 
-abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**), hash_t* hash);
+abb_t* csv_crear_estructura_doctor(const char* ruta_csv,hash_t* hash);
 
 hash_t* csv_crear_estructura_pacientes(const char* ruta_csv);
 

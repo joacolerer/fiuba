@@ -11,12 +11,17 @@
 	hash_t* especialidades;
 };
 
+/* ******************************************************************
+ *                      FUNCIONES AUXILIARES
+ * *****************************************************************/
+bool validar_prioridad(char* prioridad){
+	return (strcmp(prioridad,"URGENTE") == 0) || (strcmp(prioridad,"REGULAR") == 0);
+}
+
 
 /* ******************************************************************
- *                      FUNCIONES DE CREACION
+ *                           PRIMITIVAS
  * *****************************************************************/
-
-// Tal vez deberiamos hacer copia de los parametros en estas funciones
 
 clinica_t* crear_clinica(char** argv){
 	clinica_t* clinica = malloc(sizeof(clinica_t));
@@ -26,7 +31,7 @@ clinica_t* crear_clinica(char** argv){
 		free(clinica);
 		return NULL;
 	}
-	clinica->doctores = csv_crear_estructura_doctor(argv[1],(void*)crear_doctor,hash_especialidades);
+	clinica->doctores = csv_crear_estructura_doctor(argv[1],hash_especialidades);
 	if(!clinica->doctores){
 		hash_destruir(hash_especialidades);
 		free(clinica);
@@ -44,9 +49,34 @@ clinica_t* crear_clinica(char** argv){
 }
 
 
-/* ******************************************************************
- *                      FUNCIONES DE DESTRUCCIÒN
- * *****************************************************************/
+void pedir_turno_paciente(clinica_t* clinica, char* nombre, char* nombre_especialidad , char* prioridad){
+	if (!hash_pertenece(clinica->pacientes,nombre)){
+		printf(ENOENT_PACIENTE,nombre);
+		return;
+	}
+	especialidad_t* especialidad = hash_obtener(clinica->especialidades,nombre_especialidad);
+	if (!especialidad){
+		printf(ENOENT_ESPECIALIDAD,nombre_especialidad);
+		return;
+	}
+
+	if (!validar_prioridad(prioridad)){
+		printf(ENOENT_URGENCIA,prioridad);
+		return;
+	}
+
+	if (strcmp(prioridad,"URGENCIA") == 0){
+		encolar_paciente_urgencias(especialidad,nombre);
+	}
+
+	else{
+		int* anio = hash_obtener(clinica->pacientes,nombre);
+		encolar_paciente_regulares(especialidad,nombre,anio);
+	}
+	printf(PACIENTE_ENCOLADO,nombre);
+	long cant_pacientes = cantidad_pacientes_especialidad(especialidad);
+	printf(CANT_PACIENTES_ENCOLADOS,cant_pacientes,nombre_especialidad);
+}
 
 void destruir_clinica(clinica_t* clinica){
 	abb_destruir(clinica->doctores);
@@ -54,5 +84,3 @@ void destruir_clinica(clinica_t* clinica){
 	hash_destruir(clinica->especialidades);
 	free(clinica);
 }
-
-

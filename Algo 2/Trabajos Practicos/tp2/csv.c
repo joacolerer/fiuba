@@ -34,14 +34,14 @@ bool validar_anio(char* cadena){
  *                      FUNCIONES PRINCIPALES
  * *****************************************************************/
 
-abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char**), hash_t* hash_especialidad){
+abb_t* csv_crear_estructura_doctor(const char* ruta_csv, hash_t* hash_especialidad){
 	FILE* archivo = fopen(ruta_csv, "r");
 	if (!archivo){
 		printf(ENOENT_ARCHIVO, ruta_csv);
 		return NULL;
 	}
 
-	abb_t* abb = abb_crear(strcmp,free);
+	abb_t* abb = abb_crear(strcmp,w_destruir_doctor);
 	if (!abb) {
 		fclose(archivo);
 		return NULL;
@@ -52,7 +52,7 @@ abb_t* csv_crear_estructura_doctor(const char* ruta_csv, void* (*creador) (char*
 		eliminar_fin_linea(linea);
 		char** campos = split(linea, SEPARADOR);
 		//Si no existe la especialidad en el hash
-		doctor_t* doctor = creador(campos);
+		doctor_t* doctor = crear_doctor(campos[0],campos[1]);
 		if(!hash_pertenece(hash_especialidad,campos[1])){
 			//La creo
 			especialidad_t* especialidad = crear_especialidad(campos[1]);

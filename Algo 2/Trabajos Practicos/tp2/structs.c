@@ -1,4 +1,7 @@
+#define _POSIX_C_SOURCE 200809L
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "structs.h"
 
 
@@ -19,9 +22,10 @@ struct paciente{
 
  struct especialidad{
 	char* nombre;
-	heap_t* regulares; // Puede ser un abb
+	heap_t* regulares;
 	cola_t* urgencias;
-	cola_t* doctores; // Puede ser una pila
+	cola_t* doctores;
+	int cant_pacientes;
 };
 
 /* ******************************************************************
@@ -35,26 +39,30 @@ int cmp_pacientes(const void *a, const void *b){
     return -1;
 }
 
+
+
 /* ******************************************************************
  *                      FUNCIONES DE CREACION
  * *****************************************************************/
 
 // Tal vez deberiamos hacer copia de los parametros en estas funciones
 
-doctor_t* crear_doctor(char** campos){
+doctor_t* crear_doctor(const char* nombre, const char* especialidad){
 	doctor_t* doctor = malloc(sizeof(doctor_t));
 	if (!doctor) return NULL;
 	doctor->cant_atendidos = 0;
-	doctor->nombre = campos[0];
-	doctor->especialidad = campos[1];
+	char* copia_nombre = strdup(nombre);
+	doctor->nombre = copia_nombre;
+	char* copia_especialidad = strdup(especialidad);
+	doctor->especialidad = copia_especialidad;
 	return doctor;
 }
 
-paciente_t* crear_paciente(char** campos,void* extra){
+paciente_t* crear_paciente(char* nombre, int anio){
 	paciente_t* paciente = malloc(sizeof(paciente_t));
 	if (!paciente) return NULL;
-	paciente->nombre = campos[0];
-	paciente->anio = atoi(campos[1]); // Validar anios !
+	paciente->nombre = nombre;
+	paciente->anio = anio;
 	return paciente;
 }
 
@@ -80,6 +88,7 @@ especialidad_t* crear_especialidad(char* nombre){
 		free(especialidad);
 		return NULL;
 	}
+	especialidad->cant_pacientes = 0;
 	return especialidad;
 }
 
@@ -92,7 +101,8 @@ void destruir_paciente(paciente_t* paciente){
 	free(paciente);
 }
 void destruir_doctor(doctor_t* doctor){
-	//free(doctor->nombre)
+	free(doctor->nombre);
+	free(doctor->especialidad);
 	free(doctor);
 }
 
@@ -101,9 +111,13 @@ void w_destruir_especialidad(void* especialidad){
 	destruir_especialidad((especialidad_t*) especialidad);
 }
 
+void w_destruir_doctor(void* doctor){
+	destruir_doctor((doctor_t*) doctor);
+}
+
 void destruir_especialidad(especialidad_t* especialidad){
 	heap_destruir(especialidad->regulares,free);
-	cola_destruir(especialidad->doctores,free);
+	cola_destruir(especialidad->doctores,NULL);
 	cola_destruir(especialidad->urgencias,free);
 	free(especialidad);
 }
@@ -115,3 +129,32 @@ void destruir_especialidad(especialidad_t* especialidad){
 void encolar_doctor_en_especialidad(especialidad_t* especialidad, doctor_t* doctor){
 	cola_encolar(especialidad->doctores,doctor);
 }
+
+void encolar_paciente_urgencias(especialidad_t* especialidad,char* nombre){
+	cola_encolar(especialidad->urgencias,nombre);
+	especialidad->cant_pacientes++;
+}
+
+bool encolar_paciente_regulares(especialidad_t* especialidad,char* nombre,int* anio){
+	paciente_t* paciente = crear_paciente(nombre,*anio);
+	if(!paciente) return NULL;
+	heap_encolar(especialidad->regulares,paciente);
+	especialidad->cant_pacientes++;
+	return true;
+}
+
+long cantidad_pacientes_especialidad(especialidad_t* especialidad){
+	return especialidad->cant_pacientes;
+}
+
+/*
+void mostrar_doctor_cola(especialidad_t* especialidad){
+	char** doctor1 = cola_ver_primero(especialidad->doctores);
+	printf("El nombre del primer doctor es: %s \n", *doctor1);
+	char** doctor11 = cola_desencolar(especialidad->doctores);
+	printf("Coincide: %d \n", *doctor1 == *doctor11);
+	char** doctor2 = cola_ver_primero(especialidad->doctores);
+	printf("El nombre del ultimo doctor es: %s \n", *doctor2);
+
+}
+*/
