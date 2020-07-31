@@ -97,7 +97,7 @@ especialidad_t* crear_especialidad(char* nombre){
  * *****************************************************************/
 
 void destruir_paciente(paciente_t* paciente){
-	//free(paciente->nombre)?
+	free(paciente->nombre);
 	free(paciente);
 }
 void destruir_doctor(doctor_t* doctor){
@@ -147,14 +147,36 @@ long cantidad_pacientes_especialidad(especialidad_t* especialidad){
 	return especialidad->cant_pacientes;
 }
 
-/*
-void mostrar_doctor_cola(especialidad_t* especialidad){
-	char** doctor1 = cola_ver_primero(especialidad->doctores);
-	printf("El nombre del primer doctor es: %s \n", *doctor1);
-	char** doctor11 = cola_desencolar(especialidad->doctores);
-	printf("Coincide: %d \n", *doctor1 == *doctor11);
-	char** doctor2 = cola_ver_primero(especialidad->doctores);
-	printf("El nombre del ultimo doctor es: %s \n", *doctor2);
-
+char* conseguir_especialidad_doctor(doctor_t* doctor){
+	return doctor->especialidad;
 }
-*/
+
+bool hay_pacientes_urgentes(especialidad_t* especialidad){
+	return !cola_esta_vacia(especialidad->urgencias);
+}
+
+bool hay_pacientes_regulares(especialidad_t* especialidad){
+	return !heap_esta_vacio(especialidad->regulares);
+}
+
+char* desencolar_urgente(especialidad_t* especialidad){
+	especialidad->cant_pacientes--;
+	return cola_desencolar(especialidad->urgencias);
+}
+
+paciente_t* desencolar_regular(especialidad_t* especialidad){
+	especialidad->cant_pacientes--;
+	return heap_desencolar(especialidad->regulares);
+}
+
+char* nombre_especialidad(especialidad_t* especialidad){
+	return especialidad->nombre;
+}
+
+char* nombre_paciente(paciente_t* paciente){
+	return paciente->nombre;
+}
+
+void atiende_doctor(doctor_t* doctor){
+	doctor->cant_atendidos++;
+}

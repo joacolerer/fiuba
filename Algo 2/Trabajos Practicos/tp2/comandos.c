@@ -34,6 +34,7 @@ void procesar_comando(const char* comando,char** parametros, clinica_t* clinica)
             printf(ENOENT_PARAMS,comando);
             return;
         }
+		atender_siguiente_paciente(clinica, parametros[0]);
 	} else if (strcmp(comando, COMANDO_INFORME) == 0) {
         if(cant_parametros != 2){
             printf(ENOENT_PARAMS,comando);

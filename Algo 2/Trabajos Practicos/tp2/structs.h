@@ -36,6 +36,22 @@ bool encolar_paciente_regulares(especialidad_t* especialidad, char* nombre,int* 
 
 long cantidad_pacientes_especialidad(especialidad_t* especialidad);
 
+char* conseguir_especialidad_doctor(doctor_t* doctor);
+
+bool hay_pacientes_urgentes(especialidad_t* especialidad);
+
+char* desencolar_urgente(especialidad_t* especialidad);
+
+paciente_t* desencolar_regular(especialidad_t* especialidad);
+
+char* nombre_especialidad(especialidad_t* especialidad);
+
+bool hay_pacientes_regulares(especialidad_t* especialidad); 
+
+char* nombre_paciente(paciente_t* paciente);
+
+void atiende_doctor(doctor_t* doctor);
+
 //wrappers
 void w_destruir_doctor(void* doctor);
 
