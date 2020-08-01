@@ -329,7 +329,6 @@ void apilar_en_iter(nodo_abb_t* nodo, pila_t* pila){
 	}
 }
 
-
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
 	abb_iter_t* abb_iter = malloc(sizeof(abb_iter_t));
 	if (abb_iter == NULL) return NULL;

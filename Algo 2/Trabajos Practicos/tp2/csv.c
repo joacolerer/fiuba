@@ -52,10 +52,12 @@ abb_t* csv_crear_estructura_doctor(const char* ruta_csv, hash_t* hash_especialid
 		eliminar_fin_linea(linea);
 		char** campos = split(linea, SEPARADOR);
 		//Si no existe la especialidad en el hash
-		doctor_t* doctor = crear_doctor(campos[0],campos[1]);
-		if(!hash_pertenece(hash_especialidad,campos[1])){
+		char* nombre_doc = strdup(campos[0]);
+		char* especialidad_doc = strdup(campos[1]);
+		doctor_t* doctor = crear_doctor(nombre_doc,especialidad_doc);
+		if(!hash_pertenece(hash_especialidad,especialidad_doc)){
 			//La creo
-			especialidad_t* especialidad = crear_especialidad(campos[1]);
+			especialidad_t* especialidad = crear_especialidad(especialidad_doc);
 			if(!especialidad){
 				fclose(archivo);
 				free_strv(campos);
@@ -66,14 +68,14 @@ abb_t* csv_crear_estructura_doctor(const char* ruta_csv, hash_t* hash_especialid
 			//Encolo el doctor en esa especialidad
 			encolar_doctor_en_especialidad(especialidad,doctor);
 			//Guardo la especialidad
-			hash_guardar(hash_especialidad,campos[1],especialidad);
+			hash_guardar(hash_especialidad,especialidad_doc,especialidad);
 		} else {
 			//Si existe, obtengo la especialidad en el hash
-			especialidad_t* especialidad = hash_obtener(hash_especialidad,campos[1]);
+			especialidad_t* especialidad = hash_obtener(hash_especialidad,especialidad_doc);
 			//Y encolo al doctor en esa especialidad
 			encolar_doctor_en_especialidad(especialidad,doctor);
 		}
-		abb_guardar(abb, campos[0],doctor);
+		abb_guardar(abb, nombre_doc,doctor);
 		free_strv(campos);
 	}
 	free(linea);
