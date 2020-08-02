@@ -40,6 +40,7 @@ void procesar_comando(const char* comando,char** parametros, clinica_t* clinica)
             printf(ENOENT_PARAMS,comando);
             return;
         }
+		informe_doctores(clinica, parametros[0], parametros[1]);
 	} else {
         printf(ENOENT_CMD, comando);
 	}

@@ -313,12 +313,33 @@ void abb_iterar(nodo_abb_t* nodo_abb
 	abb_iterar(nodo_abb->der,visitar,extra,iterar);
 }
 
+void abb_iterar_por_rangos(nodo_abb_t* nodo_abb
+ , bool visitar(const char *, void *, void *), void * extra
+ , void* minimo, void* maximo){
+	if (nodo_abb == NULL) return;
+	
+	if(strcmp(nodo_abb->clave, minimo) > 0){
+		abb_iterar_por_rangos(nodo_abb->izq,visitar,extra, minimo, maximo);
+	}
+
+	visitar(nodo_abb->clave,nodo_abb->dato,extra);
+
+	if(strcmp(nodo_abb->clave, minimo) < 0){
+		abb_iterar_por_rangos(nodo_abb->der,visitar,extra, minimo, maximo);
+	}
+}
+
 /* Iterador Interno */
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
 	bool iterar = true;
 	abb_iterar(arbol->raiz,visitar,extra, &iterar);
 }
+
+void abb_in_order_por_rangos(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra, void* minimo, void* maximo){
+	abb_iterar_por_rangos(arbol->raiz,visitar,extra, minimo, maximo);
+}
+
 
 /* Iterador interno */
 

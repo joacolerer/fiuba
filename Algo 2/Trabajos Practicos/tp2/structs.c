@@ -177,6 +177,14 @@ char* nombre_paciente(paciente_t* paciente){
 	return paciente->nombre;
 }
 
+char* nombre_doctor(doctor_t* doctor){
+	return doctor->nombre;
+}
+
 void atiende_doctor(doctor_t* doctor){
 	doctor->cant_atendidos++;
+}
+
+size_t pacientes_doctor(doctor_t* doctor){
+	return doctor->cant_atendidos;
 }

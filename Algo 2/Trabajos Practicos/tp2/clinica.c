@@ -2,7 +2,7 @@
 
 
 /* ******************************************************************
- *                    ESTRUCTURAS PRINCIPALES
+ *                     ESTRUCTURA PRINCIPAL
  * *****************************************************************/
 
  struct clinica{
@@ -18,6 +18,10 @@ bool validar_prioridad(char* prioridad){
 	return (strcmp(prioridad,"URGENTE") == 0) || (strcmp(prioridad,"REGULAR") == 0);
 }
 
+void mostrar_mensaje_paciente(char* nombre_paciente, long cant_pacientes, char* nombre_especialidad){
+	printf(PACIENTE_ATENDIDO, nombre_paciente);
+	printf(CANT_PACIENTES_ENCOLADOS,cant_pacientes,nombre_especialidad);
+}
 
 /* ******************************************************************
  *                           PRIMITIVAS
@@ -46,12 +50,6 @@ clinica_t* crear_clinica(char** argv){
 	}
 	clinica->especialidades = hash_especialidades;
 	return clinica;
-}
-
-
-void mostrar_mensaje_paciente(char* nombre_paciente, long cant_pacientes, char* nombre_especialidad){
-	printf(PACIENTE_ATENDIDO, nombre_paciente);
-	printf(CANT_PACIENTES_ENCOLADOS,cant_pacientes,nombre_especialidad);
 }
 
 
@@ -104,6 +102,61 @@ void atender_siguiente_paciente(clinica_t* clinica, char* nombre_doc){
 		mostrar_mensaje_paciente(nombre_paciente(paciente_desencolado), cantidad_pacientes_especialidad(especialidad), nombre_especialidad(especialidad));
 		destruir_paciente(paciente_desencolado);
 	}
+}
+
+bool visitar(const char* clave, void* dato, void* extra){
+	lista_insertar_ultimo((lista_t*)extra,dato);
+	return true;
+}
+
+bool mostrar_doctor(const char* clave, void* dato, void* extra){
+	printf(INFORME_DOCTOR, *(size_t*)extra, nombre_doctor((doctor_t*)dato), conseguir_especialidad_doctor((doctor_t*)dato)
+	, pacientes_doctor((doctor_t*)dato));
+	*(size_t*) extra+=1;
+	return true;
+}
+
+void recorrer_doctores_por_rangos(clinica_t* clinica, char* minimo, char* maximo){
+	size_t contador = 1;
+	lista_t* lista_doctores = lista_crear();
+	abb_in_order_por_rangos(clinica->doctores, visitar,lista_doctores,minimo,maximo);
+	printf(DOCTORES_SISTEMA,lista_largo(lista_doctores));
+	lista_iter_t* iterador_lista = lista_iter_crear(lista_doctores);
+	while(!lista_iter_al_final(iterador_lista)){
+		doctor_t* doctor = lista_iter_ver_actual(iterador_lista);
+		printf(INFORME_DOCTOR, contador, nombre_doctor(doctor), conseguir_especialidad_doctor(doctor),pacientes_doctor(doctor));
+		contador++;
+	}
+}
+
+void informe_doctores(clinica_t* clinica,char* inicio,char* fin){
+	if (!abb_pertenece(clinica->doctores,inicio) && strcmp(inicio,"")!=0){
+		printf(ENOENT_DOCTOR,inicio);
+		return;
+	}
+	if (!abb_pertenece(clinica->doctores,fin) && strcmp(fin,"")!=0){
+		printf(ENOENT_DOCTOR,fin);
+		return;
+	}
+	bool hay_inicio = strcmp(inicio,"") == 0 ? false : true;
+	bool hay_fin = strcmp(inicio,"") == 0 ? false : true;
+	if(!hay_inicio && !hay_fin){
+		size_t contador = 1;
+		printf(DOCTORES_SISTEMA,abb_cantidad(clinica->doctores));
+		abb_in_order(clinica->doctores, mostrar_doctor, &contador);
+		return;
+	}
+	//FALTARIAN CASOS BORDE
+	if(!hay_inicio){
+		inicio = "AAAAAAAAAA";
+		return;
+	}
+	if(!hay_fin){
+		fin = "ZZZZZZZZZZZZ";
+		return;
+	}
+	recorrer_doctores_por_rangos(clinica, inicio, fin);
+	return;
 }
 
 

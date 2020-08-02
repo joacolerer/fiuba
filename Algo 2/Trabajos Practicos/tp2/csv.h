@@ -10,21 +10,28 @@
 #include "mensajes.h"
 #include "strutil.h"
 
-/**
-Haciendo uso de strutil (split) lee un archivo csv y, línea a línea,
-va llamando al constructor que se pasa por parámetro. Dicho constructor se invoca
-con la línea separada por split, sin fines de línea ni ninguna otra consideración,
-y con el puntero extra que se pasa por parámetro.
-Importante: la función constructor no debe guardar las referencias a las cadenas
-dentro de arreglo de cadenas pasado por parámetros (hacer copias en caso de ser
-necesario); luego de invocarse el constructor se invoca a free_strv.
+// Importante: Esto no es un TDA, son funciones auxiliares utilizadas en el TDA clinica,
+// puestas en un archivo aparte para modularizar y poder debuguear mas comodamente.
 
-Se devuelve una lista con todos los elementos construidos. NULL en caso que el archivo
-csv (indicado por la ruta pasada por parámetro) no exista.
-**/
-
+// Recibe el nombre de un archivo csv con la informacion sobre los doctores de una
+// clinica. Crea un abb con la informacion alli encontrada, siendo la clave el nombre
+// del doctor y el dato un puntero a un struct doctor.
+// Adicionalmente crea un hash de especialidades, cuya clave es el nombre de la
+// especialidad y su dato un puntero al struct especialidad.
+// Imprime por pantalla en caso de haber un error con la lectura de los archivos.
+// Post: Devuelve un abb de los doctores, y almacena las especialidades en un hash,
+// o NULL si hubo algun problema en la creacion o lectura del archivo.
 abb_t* csv_crear_estructura_doctor(const char* ruta_csv,hash_t* hash);
 
+// Recibe el nombre de un archivo csv con la informacion sobre los paciente de una
+// clinica. Crea un hash con la informacion alli encontrada, siendo la clave el nombre
+// del paciente y el dato el año de ingreso a la clinica.
+// Adicionalmente crea un hash de especialidades, cuya clave es el nombre de la
+// especialidad y su dato un puntero al struct especialidad.
+// Imprime por pantalla en caso de haber un error con la lectura de los archivos
+// o si uno de los años no es un valor valido.
+// Post: Devuelve un hash de los pacientes, o NULL si hubo un porblema en la creacion
+// lectura de archivo o si un año no era un valor valido.
 hash_t* csv_crear_estructura_pacientes(const char* ruta_csv);
 
 
