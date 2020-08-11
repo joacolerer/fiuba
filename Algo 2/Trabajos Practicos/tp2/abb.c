@@ -297,6 +297,14 @@ void abb_destruir(abb_t *arbol){
 	free(arbol);
 }
 
+char* devolver_minimo_recursivo(nodo_abb_t* nodo){
+	if(!nodo) return NULL;
+	while(nodo->izq != NULL){
+		nodo = nodo->izq;
+	}
+	return nodo->clave;
+}
+
 
 /* ******************************************************************
  *                     PRIMITIVAS DEL ITERADOR
@@ -322,9 +330,11 @@ void abb_iterar_por_rangos(nodo_abb_t* nodo_abb
 		abb_iterar_por_rangos(nodo_abb->izq,visitar,extra, minimo, maximo);
 	}
 
-	visitar(nodo_abb->clave,nodo_abb->dato,extra);
+	if(strcmp(nodo_abb->clave, minimo) >= 0 && strcmp(nodo_abb->clave, maximo) <= 0){
+		visitar(nodo_abb->clave,nodo_abb->dato,extra);
+	}
 
-	if(strcmp(nodo_abb->clave, minimo) < 0){
+	if(strcmp(nodo_abb->clave, maximo) < 0){
 		abb_iterar_por_rangos(nodo_abb->der,visitar,extra, minimo, maximo);
 	}
 }

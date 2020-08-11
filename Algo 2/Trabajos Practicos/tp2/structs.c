@@ -47,14 +47,14 @@ int cmp_pacientes(const void *a, const void *b){
 
 // Tal vez deberiamos hacer copia de los parametros en estas funciones
 
-doctor_t* crear_doctor(const char* nombre, const char* especialidad){
+doctor_t* crear_doctor(char* nombre,  char* especialidad){
 	doctor_t* doctor = malloc(sizeof(doctor_t));
 	if (!doctor) return NULL;
 	doctor->cant_atendidos = 0;
-	char* copia_nombre = strdup(nombre);
-	doctor->nombre = copia_nombre;
-	char* copia_especialidad = strdup(especialidad);
-	doctor->especialidad = copia_especialidad;
+	//char* copia_nombre = strdup(nombre);
+	doctor->nombre = nombre;
+	//char* copia_especialidad = strdup(especialidad);
+	doctor->especialidad = especialidad;
 	return doctor;
 }
 
@@ -115,8 +115,12 @@ void w_destruir_doctor(void* doctor){
 	destruir_doctor((doctor_t*) doctor);
 }
 
+void w_destruir_paciente(void* paciente){
+	destruir_paciente((paciente_t*) paciente);
+}
+
 void destruir_especialidad(especialidad_t* especialidad){
-	heap_destruir(especialidad->regulares,free);
+	heap_destruir(especialidad->regulares,w_destruir_paciente);
 	cola_destruir(especialidad->doctores,NULL);
 	cola_destruir(especialidad->urgencias,free);
 	free(especialidad);

@@ -28,7 +28,7 @@ typedef struct especialidad especialidad_t;
 
 // Crea un Doctor recibiendo el nombre y su especialidad.
 // Post: devuelve un doctor o NULL si no se pudo crear.
-doctor_t *crear_doctor(const char* nombre, const char* especialidad);
+doctor_t *crear_doctor(char* nombre, char* especialidad);
 
 // Crea un Paciente recibiendo el nombre y su año de ingreso a la clinica.
 // Post: devuelve un paciente o NULL si no se pudo crear.

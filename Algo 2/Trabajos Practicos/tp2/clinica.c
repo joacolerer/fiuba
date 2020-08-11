@@ -54,7 +54,7 @@ clinica_t* crear_clinica(char** argv){
 
 
 void pedir_turno_paciente(clinica_t* clinica, char* nombre, char* nombre_especialidad , char* prioridad){
-	char* nombre_paciente = strdup(nombre);
+
 	if (!hash_pertenece(clinica->pacientes,nombre)){
 		printf(ENOENT_PACIENTE,nombre);
 		return;
@@ -69,7 +69,7 @@ void pedir_turno_paciente(clinica_t* clinica, char* nombre, char* nombre_especia
 		printf(ENOENT_URGENCIA,prioridad);
 		return;
 	}
-
+	char* nombre_paciente = strdup(nombre);
 	if (strcmp(prioridad,"URGENTE") == 0){
 		encolar_paciente_urgencias(especialidad,nombre_paciente);
 	}else{
@@ -125,21 +125,16 @@ void recorrer_doctores_por_rangos(clinica_t* clinica, char* minimo, char* maximo
 	while(!lista_iter_al_final(iterador_lista)){
 		doctor_t* doctor = lista_iter_ver_actual(iterador_lista);
 		printf(INFORME_DOCTOR, contador, nombre_doctor(doctor), conseguir_especialidad_doctor(doctor),pacientes_doctor(doctor));
+		lista_iter_avanzar(iterador_lista);
 		contador++;
 	}
+	lista_iter_destruir(iterador_lista);
+	lista_destruir(lista_doctores,NULL);
 }
 
 void informe_doctores(clinica_t* clinica,char* inicio,char* fin){
-	if (!abb_pertenece(clinica->doctores,inicio) && strcmp(inicio,"")!=0){
-		printf(ENOENT_DOCTOR,inicio);
-		return;
-	}
-	if (!abb_pertenece(clinica->doctores,fin) && strcmp(fin,"")!=0){
-		printf(ENOENT_DOCTOR,fin);
-		return;
-	}
 	bool hay_inicio = strcmp(inicio,"") == 0 ? false : true;
-	bool hay_fin = strcmp(inicio,"") == 0 ? false : true;
+	bool hay_fin = strcmp(fin,"") == 0 ? false : true;
 	if(!hay_inicio && !hay_fin){
 		size_t contador = 1;
 		printf(DOCTORES_SISTEMA,abb_cantidad(clinica->doctores));
@@ -149,11 +144,9 @@ void informe_doctores(clinica_t* clinica,char* inicio,char* fin){
 	//FALTARIAN CASOS BORDE
 	if(!hay_inicio){
 		inicio = "AAAAAAAAAA";
-		return;
 	}
 	if(!hay_fin){
-		fin = "ZZZZZZZZZZZZ";
-		return;
+		fin = "ZZZZZZZZZZZZ";	
 	}
 	recorrer_doctores_por_rangos(clinica, inicio, fin);
 	return;
