@@ -22,7 +22,7 @@ class Grafo():
         if self.existe_vertice(v):
             self.vertices.pop(v)
         for i in self.vertices:
-            if v in self.vertices[i].keys:
+            if v in self.vertices[i].keys():
                 self.vertices[i].pop(v)
     
     def sacar_arista(self,inicio,fin):
